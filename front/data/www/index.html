@@ -25,6 +25,7 @@
 import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useState, useEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 
 function FilterableGoodsTable({ goods }) {
   const [filterText, setFilterText] = useState('');
@@ -129,14 +130,29 @@ function SearchBar({
   );
 }
 
-const GOODS = [
-    {"registro": "1", "nome": "Action", "fabricante": "FCCSA", "tipo": "catalisador", "descricao": "Parceria com Albermale, tecnologia de zeólita - gasolina para GLP." },
-    {"registro": "2", "nome": "AFX", "fabricante": "FCCSA", "tipo": "catalisador", "descricao": "Parceria com Albermale, alto rendimento de propeno." },
-    {"registro": "3", "nome": "AMBER", "fabricante": "FCCSA", "tipo": "catalisador", "descricao": "Para refinadores de gasóleo, proporciona máxima produção de gasolina e destilados médios." },
-    {"registro": "4", "nome": "Denali", "fabricante": "FCCSA", "tipo": "catalisador", "descricao": "Parceria com Albermale, liderança no rendimento de butenos. Tecnologia GRANITE." },
-    {"registro": "5", "nome": "Everest", "fabricante": "FCCSA", "tipo": "catalisador", "descricao": "Parceria com Albermale, alto rendimento de butenos e octanagem. Tecnologia GRANITE." },
-    {"registro": "6", "nome": "Ruby", "fabricante": "FCCSA", "tipo": "catalisador", "descricao": "Parceria com Albermale, seletividade a nafta/LCO e maior octanagem." }
-];
+// const GOODS = [
+//     {"registro": "1", "nome": "Action", "fabricante": "FCCSA", "tipo": "catalisador", "descricao": "Parceria com Albermale, tecnologia de zeólita - gasolina para GLP." },
+//     {"registro": "2", "nome": "AFX", "fabricante": "FCCSA", "tipo": "catalisador", "descricao": "Parceria com Albermale, alto rendimento de propeno." },
+//     {"registro": "3", "nome": "AMBER", "fabricante": "FCCSA", "tipo": "catalisador", "descricao": "Para refinadores de gasóleo, proporciona máxima produção de gasolina e destilados médios." },
+//     {"registro": "4", "nome": "Denali", "fabricante": "FCCSA", "tipo": "catalisador", "descricao": "Parceria com Albermale, liderança no rendimento de butenos. Tecnologia GRANITE." },
+//     {"registro": "5", "nome": "Everest", "fabricante": "FCCSA", "tipo": "catalisador", "descricao": "Parceria com Albermale, alto rendimento de butenos e octanagem. Tecnologia GRANITE." },
+//     {"registro": "6", "nome": "Ruby", "fabricante": "FCCSA", "tipo": "catalisador", "descricao": "Parceria com Albermale, seletividade a nafta/LCO e maior octanagem." }
+// ];
+
+// const GOODS = await fetch('http://localhost:8000/')
+//   .then(response => response.json())
+//   .then(data => console.log(data.mysql_data))
+//   .catch(error => console.error(error));
+  
+async function getGoods() {
+  const response = await fetch('http://localhost:8000/');
+  const GOODS = await response.json();
+  console.log(GOODS.mysql_data);
+  return GOODS.mysql_data
+}
+
+const GOODS = await getGoods();
+
 
 let Mercadoria = function Mercadoria() {
     return <FilterableGoodsTable goods={GOODS} />;

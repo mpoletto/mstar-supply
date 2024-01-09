@@ -1,5 +1,2 @@
 # Frontend - Nginx
 1 . docker compose up
-
-# MySQL
-1. docker run --name=mysql -p3306:3306 -v mysql-volume:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=**** -d mysql:latest

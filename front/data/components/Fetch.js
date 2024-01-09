@@ -1,24 +1,35 @@
 import { useState, useEffect } from 'react';
 
 const Fetch = () => {
-  const [photos, setPhotos] = useState([]);
-  useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/photos')
-      .then((res) => {
-        return res.json();
+  const [users, setUsers] = useState([]);
+
+  const fetchUserData = () => {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then(response => {
+        return response.json();
       })
-      .then((data) => {
-        console.log(data);
-        setPhotos(data);
+      .then(data => {
+        setUsers(data);
       });
+  };
+
+  useEffect(() => {
+    fetchUserData();
   }, []);
+
   return (
     <div>
-      
-      {photos.map((photo) => (
-        <img key={photo.id} src={photo.url} alt={photo.title} width={100} />
-      ))}
+    {
+      users.length > 0 && (
+        { users.map(user => (<span>{user.name}</span>)) }
+      )
+    }
     </div>
   );
 };
+
+
+
+
+
 export default Fetch;
