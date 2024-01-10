@@ -22,6 +22,7 @@ export default async function handler(
   })
 
   const response = schema.safeParse(req.body)
+
   if (!response.success) {
     const { errors } = response.error;
 

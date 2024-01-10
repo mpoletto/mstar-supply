@@ -1,7 +1,9 @@
+from os import abort
 import time
-
+import json
 import redis
-from flask import Flask, jsonify
+from flask import Flask, jsonify, Response, request
+import pprint
 import mysql.connector
 
 app = Flask(__name__)
@@ -45,18 +47,27 @@ def hello():
 
 @app.route('/mercadoria/save', methods=['POST'])
 def save_mercadoria():
+    
+    # str = pprint.pformat(request.environ, depth=5)
+    # json_str = json.dumps(jsonify({request.json}))
+    # return Response(str, mimetype="application/json")
+    return { request.json['nome'] }, 201
+
     if not request.json or not'mercadoria' in request.json:
-        abort(400)
+        return jsonify({'message': 'no json or mercadoria field'}), 400
     mercadoria = {
-        'id': request.json['mercadoria']['id'],
+        'registro': request.json['mercadoria']['registro'],
         'nome': request.json['mercadoria']['nome'],
-        'quantidade': request.json['mercadoria']['quantidade'],
-        'preco': request.json['mercadoria']['preco'],
-        'data_entrada': request.json['mercadoria']['data_entrada']
+        'fabricante': request.json['mercadoria']['fabricante'],
+        'tipo': request.json['mercadoria']['tipo'],
+        'descricao': request.json['mercadoria']['descricao']
     }
     cursor = mysql.connection.cursor(dictionary=True)
-    query = "INSERT INTO mercadoria (id, nome, quantidade, preco, data_entrada) VALUES (%(id)s, %(nome)s, %(quantidade)s, %(preco)s, %(data_entrada)s)"
+    query = "INSERT INTO mercadoria (registro, nome, fabricante, tipo, descricao) VALUES (%(registro)s, %(nome)s, %(fabricante)s, %(tipo)s, %(descricao)s)"
     cursor.execute(query, mercadoria)
     mysql.connection.commit()
     cursor.close()
+    
     return jsonify({'mercadoria': mercadoria}), 201
+
+app.run(debug=True)
