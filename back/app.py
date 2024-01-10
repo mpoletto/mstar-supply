@@ -42,3 +42,21 @@ def hello():
     response = jsonify(data)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
+
+@app.route('/mercadoria/save', methods=['POST'])
+def save_mercadoria():
+    if not request.json or not'mercadoria' in request.json:
+        abort(400)
+    mercadoria = {
+        'id': request.json['mercadoria']['id'],
+        'nome': request.json['mercadoria']['nome'],
+        'quantidade': request.json['mercadoria']['quantidade'],
+        'preco': request.json['mercadoria']['preco'],
+        'data_entrada': request.json['mercadoria']['data_entrada']
+    }
+    cursor = mysql.connection.cursor(dictionary=True)
+    query = "INSERT INTO mercadoria (id, nome, quantidade, preco, data_entrada) VALUES (%(id)s, %(nome)s, %(quantidade)s, %(preco)s, %(data_entrada)s)"
+    cursor.execute(query, mercadoria)
+    mysql.connection.commit()
+    cursor.close()
+    return jsonify({'mercadoria': mercadoria}), 201
